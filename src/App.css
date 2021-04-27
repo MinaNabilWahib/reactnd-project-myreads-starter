@@ -14,7 +14,7 @@ body, .app {
 
 .list-books-title {
   padding: 10px 0;
-  background: #2e7c31;
+  background: #2ea0d1;
   text-align: center;
 }
 
@@ -53,12 +53,13 @@ body, .app {
   bottom: 25px;
 }
 
-.open-search button {
+
+.search-book { 
   display: block;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #2e7d32;
+  background: #07a2e4;
   background-image: url('./icons/add.svg');
   background-repeat: no-repeat;
   background-position: center;
@@ -67,10 +68,10 @@ body, .app {
   font-size: 0;
   outline: 0;
 }
-
-.open-search button:hover {
-  background-color: rgb(0, 102, 0);
+.search-book:hover{
+  background-color: rgb(5, 137, 214);
 }
+
 
 
 /* search page */
@@ -114,7 +115,7 @@ body, .app {
 }
 
 button:active {
-  border: red;
+  border: rgb(175, 174, 174);
   outline: none;
 }
 
@@ -169,7 +170,7 @@ button:active {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #60ac5d;
+  background: #1cb7d3;
   background-image: url('./icons/arrow-drop-down.svg');
   background-repeat: no-repeat;
   background-position: center;
