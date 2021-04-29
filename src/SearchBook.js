@@ -57,6 +57,7 @@ class SearchBook extends Component {
             BooksAPI.update(this.state.book, this.state.selectedOption)
               .then(() => {
                 //console.log(shel)
+                //console.log(this.state.book)
                 console.log('updated')
               })
           }
@@ -87,7 +88,7 @@ class SearchBook extends Component {
         const filteredResults = results.filter((book) => {
             return book.imageLinks != null && book.authors != null;
         })
-        // console.log(filteredResults)
+        console.log(filteredResults)
 
         return (
             <div className="search-books">
@@ -134,7 +135,7 @@ class SearchBook extends Component {
                                                 <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url(' + result.imageLinks.smallThumbnail + ')' }}></div>
                                                 <div className="book-shelf-changer">
                                                     <select
-                                                        onChange={(event) => this.updateshelf(event.target.value, result)}>
+                                                        onChange={(event) => this.updateshelf(event.target.value, result)} value ={'none'}>
                                                         <option value="move" disabled>Move to...</option>
                                                         <option value="currentlyReading">Currently Reading</option>
                                                         <option value="wantToRead">Want to Read</option>
