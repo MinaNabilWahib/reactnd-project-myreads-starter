@@ -1,5 +1,5 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
+//import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListBooks from './ListBooks'
 import SearchBook from './SearchBook'
@@ -10,13 +10,13 @@ class BooksApp extends React.Component {
     books: []
   }
   componentDidMount() {
-    BooksAPI.search('games')
+    /*BooksAPI.search('games')
       .then((books) => {
         this.setState(() => ({
           books
         }))
-        console.log(books)
-      })
+       // console.log(books)
+      })*/
   }
 
   render() {
