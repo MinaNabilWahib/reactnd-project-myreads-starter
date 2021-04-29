@@ -6,18 +6,7 @@ import SearchBook from './SearchBook'
 import { Route } from 'react-router-dom'
 
 class BooksApp extends React.Component {
-  state = {
-    books: []
-  }
-  componentDidMount() {
-    /*BooksAPI.search('games')
-      .then((books) => {
-        this.setState(() => ({
-          books
-        }))
-       // console.log(books)
-      })*/
-  }
+  
 
   render() {
     return (

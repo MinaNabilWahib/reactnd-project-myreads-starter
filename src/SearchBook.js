@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 //import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import { Link } from 'react-router-dom'
-//import serializeForm from 'form-serialize'
+import Book from './Book'
 
 
 class SearchBook extends Component {
@@ -11,8 +11,9 @@ class SearchBook extends Component {
         query: '',
         results: [],
         infotobeloaded: '',
-        selectedOption:'',
-        book:{}
+        selectedOption: '',
+        book: {},
+        shelfs: []
     }
     // function for updating 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -43,11 +44,21 @@ class SearchBook extends Component {
                                     infotobeloaded: 'no book matchs your search'
                                 }))
                             }
-
-
                         })
                 } catch (error) {
                     console.log(error);
+                }
+                try {
+                    BooksAPI.getAll()
+                        .then((booksInShelfs) => {
+                            // console.log(booksInShelfs)
+                            this.setState(() => ({
+                                shelfs: booksInShelfs
+                            }))
+                            // console.log(this.state.shelfs)
+                        })
+                } catch (error) {
+                    console.log(error)
                 }
             }
         }
@@ -55,12 +66,12 @@ class SearchBook extends Component {
             console.log(this.state.selectedOption)
             console.log(this.state.book)
             BooksAPI.update(this.state.book, this.state.selectedOption)
-              .then(() => {
-                //console.log(shel)
-                //console.log(this.state.book)
-                console.log('updated')
-              })
-          }
+                .then(() => {
+                    //console.log(shel)
+                    //console.log(this.state.book)
+                    console.log('updated')
+                })
+        }
     }
     updateshelf = (selectedOption, book) => {
         console.log(selectedOption)
@@ -75,20 +86,45 @@ class SearchBook extends Component {
             query: query
         }))
     }
-    clearQuery = () => {
-        this.updateQuery('')
+
+    compare(result) {
+        this.state.shelfs.forEach(element => {
+            if (result.id === element.id) {
+                result.shelf = element.shelf
+            } else {
+                result.shelf = 'none'
+            }
+
+        });
+        return result
     }
 
     render() {
-        const { query, results, infotobeloaded } = this.state
-        console.log(results)
+        const { query, results, infotobeloaded, shelfs } = this.state
+       // console.log(results)
+        //console.log(shelfs)
         // console.log(query)
         //  console.log(infotobeloaded)
-
+        // filtering  book doesn't have thumbnail
         const filteredResults = results.filter((book) => {
             return book.imageLinks != null && book.authors != null;
         })
-        console.log(filteredResults)
+        // comparing shelfs to know the current shelf for ever book 
+        const filteredResults2 = filteredResults.map((result) => {
+            for (let index = 0; index < shelfs.length; index++) {
+                if (result.id === shelfs[index].id) {
+                    result.shelf = shelfs[index].shelf
+                    break;
+                } else {
+                    result.shelf = 'none'
+                }
+            }
+            return result
+        }
+        )
+
+        //console.log(filteredResults)
+        //console.log(filteredResults2)
 
         return (
             <div className="search-books">
@@ -120,7 +156,7 @@ class SearchBook extends Component {
                     </div>
                 </div>
                 <div className="search-books-results">
-                    {filteredResults.length === 0 ?
+                    {filteredResults2.length === 0 ?
                         (
                             <ol className="books-grid">
                                 {infotobeloaded}
@@ -128,26 +164,12 @@ class SearchBook extends Component {
                         ) :
                         (
                             <ol className="books-grid">
-                                {filteredResults.map((result) => (
-                                    <li key={result.id} className='result-list-item'>
-                                        <div className="book">
-                                            <div className="book-top">
-                                                <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url(' + result.imageLinks.smallThumbnail + ')' }}></div>
-                                                <div className="book-shelf-changer">
-                                                    <select
-                                                        onChange={(event) => this.updateshelf(event.target.value, result)} value ={'none'}>
-                                                        <option value="move" disabled>Move to...</option>
-                                                        <option value="currentlyReading">Currently Reading</option>
-                                                        <option value="wantToRead">Want to Read</option>
-                                                        <option value="read">Read</option>
-                                                        <option value="none">None</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div className="book-title">{result.title}</div>
-                                            <div className="book-authors">{result.authors}</div>
-                                        </div>
-                                    </li>
+                                {filteredResults2.map((result) => (
+                                    <Book key={result.id}
+                                        book={result}
+                                        updateShelf={this.updateshelf}
+                                        currentShelf={result.shelf}
+                                    />
                                 ))}
                             </ol>
                         )}

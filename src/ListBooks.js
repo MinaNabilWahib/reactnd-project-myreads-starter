@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 //import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import { Link } from 'react-router-dom'
-
+import Book from './Book'
 class ListBooks extends Component {
   state = {
     selectedOption: '',
     shelfs: [],
-    book: {}
+    book: {},
+    currentlyReading : [],
+    wantToRead : [],
+    read : []
   }
   componentDidMount() {
     BooksAPI.getAll()
@@ -47,6 +50,14 @@ class ListBooks extends Component {
     }))
   }
 
+  updateShelfData = (currentlyReading , wantToRead , read) => {
+    this.setState(() => ({
+      currentlyReading : currentlyReading , 
+      wantToRead : wantToRead , 
+      read : read
+    }))
+  }
+
   render() {
     const { shelfs } = this.state
     //  console.log(shelfs)
@@ -61,7 +72,9 @@ class ListBooks extends Component {
     const read = shelfs.filter((book) => {
       return book.shelf === "read"
     })
-    //console.log(currentlyReading,wantToRead,read)
+    console.log(currentlyReading,wantToRead,read)
+
+  //  this.updateShelfData(currentlyReading , wantToRead , read )
 
     return (
       <div className="list-books">
@@ -75,26 +88,11 @@ class ListBooks extends Component {
               <div className="bookshelf-books">
                 <ol className="books-grid">
                   {currentlyReading.map((book) => (
-                    <li key={book.id} className='book-list-item'>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')' }}></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(event) => this.updateshelf(event.target.value, book)} value={'currentlyReading'}>
-                              <option value="move" disabled>Move to...</option>
-                              <option value="currentlyReading" >Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">{book.title}</div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
-
+                      <Book key = {book.id}
+                        book = {book}
+                        updateShelf = {this.updateshelf}
+                        currentShelf = {'currentlyReading'}
+                      />
                   ))}
                 </ol>
               </div>
@@ -103,26 +101,12 @@ class ListBooks extends Component {
               <h2 className="bookshelf-title">Want to Read</h2>
               <div className="bookshelf-books">
                 <ol className="books-grid">
-                  {wantToRead.map((book) => (
-                    <li key={book.id} className='book-list-item'>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')' }}></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(event) => this.updateshelf(event.target.value, book)} value={'wantToRead'}>
-                              <option value="move" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead" >Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">{book.title}</div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
+                {wantToRead.map((book) => (
+                      <Book key = {book.id}
+                        book = {book}
+                        updateShelf = {this.updateshelf}
+                        currentShelf = {'wantToRead'}
+                      />
                   ))}
                 </ol>
               </div>
@@ -131,26 +115,12 @@ class ListBooks extends Component {
               <h2 className="bookshelf-title">Read</h2>
               <div className="bookshelf-books">
                 <ol className="books-grid">
-                  {read.map((book) => (
-                    <li key={book.id} className='book-list-item'>
-                      <div className="book">
-                        <div className="book-top">
-                          <div className="book-cover" style={{ width: 128, height: 188, backgroundImage: 'url(' + book.imageLinks.smallThumbnail + ')' }}></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(event) => this.updateshelf(event.target.value, book)} value={'read'}>
-                              <option value="move" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">{book.title}</div>
-                        <div className="book-authors">{book.authors}</div>
-                      </div>
-                    </li>
+                {read.map((book) => (
+                      <Book key = {book.id}
+                        book = {book}
+                        updateShelf = {this.updateshelf}
+                        currentShelf = {'read'}
+                      />
                   ))}
                 </ol>
               </div>
